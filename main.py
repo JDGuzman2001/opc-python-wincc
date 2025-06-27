@@ -261,6 +261,12 @@ def read_symbols_from_csv(file_path):
     except Exception as e:
         print(f"Ha ocurrido un error inesperado al leer el archivo CSV: {e}")
         return None
+    
+def convert_value_to_boolean_or_word(value, symbol):
+    if symbol.get('Symbol') != 'Repeticiones':
+        return True if value == '1' else False
+    else:
+        return int(value)
 
 def upload_symbols_to_sql(symbols_data):
     """
@@ -309,7 +315,7 @@ def upload_symbols_to_sql(symbols_data):
                         symbol.get('Symbol'),
                         symbol.get('Data type'),
                         symbol.get('Comment'),
-                        True if value == '1' else False,
+                        convert_value_to_boolean_or_word(value, symbol),
                         symbol.get('timestamp')
                     ))
         
