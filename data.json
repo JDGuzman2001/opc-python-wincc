@@ -1,26 +1,26 @@
 {
   "DI16xDC24V": [
-    { "Address": "I 0.0", "Symbol": "Start", "Data type": "BOOL", "Comment": "", "value": false, "timestamp": "2025-06-20T10:00:00Z" },
-    { "Address": "I 0.1", "Symbol": "Emergencia", "Data type": "BOOL", "Comment": "", "value": false, "timestamp": "2025-06-20T10:00:00Z" },
-    { "Address": "I 0.2", "Symbol": "BandaVI", "Data type": "BOOL", "Comment": "Sensor Banda Entrada Tarros Verdes", "value": false, "timestamp": "2025-06-20T10:00:00Z" },
-    { "Address": "I 0.3", "Symbol": "BandaRI", "Data type": "BOOL", "Comment": "Sensor Banda Entrada Tarros Rojos", "value": false, "timestamp": "2025-06-20T10:00:00Z" },
-    { "Address": "I 0.4", "Symbol": "BandaMI", "Data type": "BOOL", "Comment": "Sensor Banda Entrada Tarros Morados", "value": false, "timestamp": "2025-06-20T10:00:00Z" },
-    { "Address": "I 1.0", "Symbol": "TarrosListos", "Data type": "BOOL", "Comment": "Fin Llenado Tarros Rojos y Verde", "value": false, "timestamp": "2025-06-20T10:00:00Z" },
-    { "Address": "I 1.1", "Symbol": "TarrosVM", "Data type": "BOOL", "Comment": "Tarro Verde Morado Lleno", "value": false, "timestamp": "2025-06-20T10:00:00Z" },
-    { "Address": "I 1.2", "Symbol": "TarrosRM", "Data type": "BOOL", "Comment": "Tarro Rojo Morado Lleno", "value": false, "timestamp": "2025-06-20T10:00:00Z" },
-    { "Address": "I 1.3", "Symbol": "OnRotator", "Data type": "BOOL", "Comment": "Indicador PLC2 Encender Rotator", "value": false, "timestamp": "2025-06-20T10:00:00Z" }
+    { "Address": "I 0.0", "Symbol": "Start", "Data type": "BOOL", "value": false, "timestamp": "2025-06-22T10:00:00Z" },
+    { "Address": "I 0.1", "Symbol": "Emergencia", "Data type": "BOOL", "value": true, "timestamp": "2025-06-22T10:02:00Z" },
+    { "Address": "I 0.2", "Symbol": "BandaVI", "Data type": "BOOL", "value": false, "timestamp": "2025-06-22T10:04:00Z" },
+    { "Address": "I 0.3", "Symbol": "BandaRI", "Data type": "BOOL", "value": false, "timestamp": "2025-06-22T10:06:00Z" },
+    { "Address": "I 0.4", "Symbol": "BandaMI", "Data type": "BOOL", "value": true, "timestamp": "2025-06-22T10:08:00Z" },
+    { "Address": "I 1.0", "Symbol": "TarrosListos", "Data type": "BOOL", "value": false, "timestamp": "2025-06-22T10:10:00Z" },
+    { "Address": "I 1.1", "Symbol": "TarrosVM", "Data type": "BOOL", "value": true, "timestamp": "2025-06-22T10:12:00Z" },
+    { "Address": "I 1.2", "Symbol": "TarrosRM", "Data type": "BOOL", "value": true, "timestamp": "2025-06-22T10:14:00Z" },
+    { "Address": "I 1.3", "Symbol": "OnRotator", "Data type": "BOOL", "value": false, "timestamp": "2025-06-22T10:16:00Z" }
   ],
   "DO8xDC24V_2A": [
-    { "Address": "Q 0.0", "Symbol": "Rotador", "Data type": "BOOL", "Comment": "Activacion Rotador", "value": false, "timestamp": "2025-06-20T10:00:00Z" },
-    { "Address": "Q 0.1", "Symbol": "FinRojoVerde", "Data type": "BOOL", "Comment": "Llegada 3 Tarros Rotador", "value": false, "timestamp": "2025-06-20T10:00:00Z" },
-    { "Address": "Q 0.2", "Symbol": "MotorVI", "Data type": "BOOL", "Comment": "Motor Banda Entrada Verdes", "value": false, "timestamp": "2025-06-20T10:00:00Z" },
-    { "Address": "Q 0.3", "Symbol": "MotorRI", "Data type": "BOOL", "Comment": "Motor Banda Entrada Rojos", "value": false, "timestamp": "2025-06-20T10:00:00Z" },
-    { "Address": "Q 0.4", "Symbol": "MotorMI", "Data type": "BOOL", "Comment": "Motor Banda Entrada Morados", "value": false, "timestamp": "2025-06-20T10:00:00Z" },
-    { "Address": "Q 0.5", "Symbol": "MotorVO", "Data type": "BOOL", "Comment": "Motor Banda Salida Verdes", "value": false, "timestamp": "2025-06-20T10:00:00Z" },
-    { "Address": "Q 0.6", "Symbol": "MotorRO", "Data type": "BOOL", "Comment": "Motor Banda Salida Rojos", "value": false, "timestamp": "2025-06-20T10:00:00Z" },
-    { "Address": "Q 0.7", "Symbol": "MotorMO", "Data type": "BOOL", "Comment": "Motor Banda Salida Morados", "value": false, "timestamp": "2025-06-20T10:00:00Z" }
+    { "Address": "Q 0.0", "Symbol": "Rotador", "Data type": "BOOL", "value": false, "timestamp": "2025-06-22T10:18:00Z" },
+    { "Address": "Q 0.1", "Symbol": "FinRojoVerde", "Data type": "BOOL", "value": true, "timestamp": "2025-06-22T10:20:00Z" },
+    { "Address": "Q 0.2", "Symbol": "MotorVI", "Data type": "BOOL", "value": true, "timestamp": "2025-06-22T10:22:00Z" },
+    { "Address": "Q 0.3", "Symbol": "MotorRI", "Data type": "BOOL", "value": false, "timestamp": "2025-06-22T10:24:00Z" },
+    { "Address": "Q 0.4", "Symbol": "MotorMI", "Data type": "BOOL", "value": true, "timestamp": "2025-06-22T10:26:00Z" },
+    { "Address": "Q 0.5", "Symbol": "MotorVO", "Data type": "BOOL", "value": false, "timestamp": "2025-06-22T10:28:00Z" },
+    { "Address": "Q 0.6", "Symbol": "MotorRO", "Data type": "BOOL", "value": true, "timestamp": "2025-06-22T10:30:00Z" },
+    { "Address": "Q 0.7", "Symbol": "MotorMO", "Data type": "BOOL", "value": true, "timestamp": "2025-06-22T10:32:00Z" }
   ],
   "AI8x13Bit": [
-    { "Address": "MW 512", "Symbol": "Repeticiones", "Data type": "WORD", "Comment": "", "value": 0, "timestamp": "2025-06-20T10:00:00Z" }
+    { "Address": "MW 512", "Symbol": "Repeticiones", "Data type": "WORD", "value": 8, "timestamp": "2025-06-22T10:34:00Z" }
   ]
-} 
+}
