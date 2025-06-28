@@ -109,6 +109,15 @@ def get_address_for_symbol(symbol_name):
     
     return symbol_to_address.get(symbol_name, '')
 
+def get_data_type_for_symbol(symbol_name):
+    """
+    Asigna el tipo de dato basado en el nombre del símbolo.
+    """
+    if symbol_name == 'Repeticiones' or symbol_name == 'CiclosTerminados':
+        return 'WORD'
+    else:
+        return 'BOOL'
+
 def read_symbols_from_csv(file_path):
     """
     Lee los símbolos desde un archivo CSV.
@@ -169,7 +178,7 @@ def read_symbols_from_csv(file_path):
                         symbol_entry = {
                             'Address': address,
                             'Symbol': variable_name,
-                            'Data type': 'BOOL' if variable_name != 'Repeticiones' else 'WORD',
+                            'Data type': get_data_type_for_symbol(variable_name),
                             'Comment': '',
                             'value': value,
                             'timestamp': parsed_timestamp
@@ -263,7 +272,7 @@ def read_symbols_from_csv(file_path):
         return None
     
 def convert_value_to_boolean_or_word(value, symbol):
-    if symbol.get('Symbol') != 'Repeticiones':
+    if symbol.get('Symbol') != 'Repeticiones' or symbol.get('Symbol') != 'CiclosTerminados':
         return True if value == '1' else False
     else:
         return int(value)
