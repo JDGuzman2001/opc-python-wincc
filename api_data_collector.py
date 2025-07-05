@@ -8,51 +8,19 @@ from api_config import api_config, get_api_url
 
 # Definición de los símbolos con sus tipos de datos
 SYMBOLS_CONFIG = [
-    {"symbol": "Boton", "address": "%I0.0", "data_type": "Bool"},
-    {"symbol": "Boton out", "address": "%Q0.0", "data_type": "Bool"},
     {"symbol": "Inicio", "address": "%I1.0", "data_type": "Bool"},
     {"symbol": "Tolva1", "address": "%MD1", "data_type": "Real"},
     {"symbol": "molido", "address": "%I2.0", "data_type": "Bool"},
-    {"symbol": "apertura1", "address": "%I3.0", "data_type": "Bool"},
     {"symbol": "tolvaintermediacafe", "address": "%MD28", "data_type": "Real"},
-    {"symbol": "expendedora", "address": "%I4.0", "data_type": "Bool"},
-    {"symbol": "empaques", "address": "%I5.0", "data_type": "Bool"},
-    {"symbol": "reset", "address": "%I6.0", "data_type": "Bool"},
     {"symbol": "total molido", "address": "%MD5", "data_type": "Real"},
-    {"symbol": "reset2", "address": "%I7.0", "data_type": "Bool"},
     {"symbol": "tolva2", "address": "%MD24", "data_type": "Real"},
     {"symbol": "tolvaempaque", "address": "%MD12", "data_type": "Real"},
-    {"symbol": "tolvacafe", "address": "%MD120", "data_type": "Real"},
-    {"symbol": "compuertaempaque", "address": "%MD20", "data_type": "Real"},
-    {"symbol": "empaque50", "address": "%I8.0", "data_type": "Bool"},
-    {"symbol": "empaque125", "address": "%I9.0", "data_type": "Bool"},
-    {"symbol": "empaque250", "address": "%I10.0", "data_type": "Bool"},
-    {"symbol": "empaque500", "address": "%I11.0", "data_type": "Bool"},
-    {"symbol": "empaque1000", "address": "%I12.0", "data_type": "Bool"},
-    {"symbol": "empaquellenado", "address": "%I13.0", "data_type": "Bool"},
-    {"symbol": "bandatrasnportadora", "address": "%I14.0", "data_type": "Bool"},
-    {"symbol": "reset3", "address": "%I14.1", "data_type": "Bool"},
-    {"symbol": "reset4", "address": "%I14.6", "data_type": "Bool"},
-    {"symbol": "stop", "address": "%M14.7", "data_type": "Bool"},
-    {"symbol": "reset5", "address": "%M32.0", "data_type": "Bool"},
-    {"symbol": "reset6", "address": "%M32.1", "data_type": "Bool"},
     {"symbol": "tipodecafe", "address": "%MW15", "data_type": "Int"},
     {"symbol": "tipodebaso", "address": "%MW34", "data_type": "Int"},
-    {"symbol": "cafebase", "address": "%MD36", "data_type": "Real"},
-    {"symbol": "aguabase", "address": "%MD40", "data_type": "Real"},
-    {"symbol": "lechebase", "address": "%MD44", "data_type": "Real"},
-    {"symbol": "volumenbase", "address": "%MD48", "data_type": "Real"},
-    {"symbol": "tamaño_vaso_real", "address": "%MD52", "data_type": "Real"},
-    {"symbol": "tamaño_vaso_int", "address": "%MW60", "data_type": "Int"},
-    {"symbol": "factor escala", "address": "%MD56", "data_type": "Real"},
     {"symbol": "cafefinal", "address": "%MD62", "data_type": "Real"},
     {"symbol": "aguafinal", "address": "%MD66", "data_type": "Real"},
     {"symbol": "lechefinal", "address": "%MD70", "data_type": "Real"},
-    {"symbol": "valvulacafe", "address": "%I74.0", "data_type": "Bool"},
     {"symbol": "iniciocafe", "address": "%I74.1", "data_type": "Bool"},
-    {"symbol": "reset7", "address": "%M74.2", "data_type": "Bool"},
-    {"symbol": "vasocafe", "address": "%MD100", "data_type": "Real"},
-    {"symbol": "nivelesperado", "address": "%MD78", "data_type": "Real"},
     {"symbol": "botoniniciocafe", "address": "%I82.0", "data_type": "Bool"},
     {"symbol": "americano", "address": "%I82.1", "data_type": "Bool"},
     {"symbol": "cafe", "address": "%I82.2", "data_type": "Bool"},
@@ -232,29 +200,45 @@ def collect_all_variables():
 def main():
     """
     Función principal para recolectar datos desde la API y subirlos a la base de datos
+    Se ejecuta cada 30 segundos de forma continua
     """
     print("=== Recolector de Datos OPC UA ===")
     print(f"URL de la API: {api_config.API_BASE_URL}")
     print(f"Total de símbolos a consultar: {len(SYMBOLS_CONFIG)}")
+    print("El programa se ejecutará cada 30 segundos...")
+    print("Presiona Ctrl+C para detener el programa.")
     print()
     
-    # Recolectar todos los valores
-    symbols_data = collect_all_variables()
-    
-    # Mostrar resumen
-    successful_collections = sum(1 for s in symbols_data if s["success"])
-    print(f"\nResumen:")
-    print(f"  - Total de símbolos: {len(symbols_data)}")
-    print(f"  - Consultas exitosas: {successful_collections}")
-    print(f"  - Consultas fallidas: {len(symbols_data) - successful_collections}")
-    
-    # Subir a la base de datos
-    if symbols_data:
-        print("\nSubiendo datos a la base de datos...")
-        upload_symbols_to_sql(symbols_data)
-        print("Proceso completado.")
-    else:
-        print("No hay datos para subir a la base de datos.")
+    try:
+        while True:
+            print(f"\n{'='*50}")
+            print(f"Ejecutando recolección de datos - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+            print(f"{'='*50}")
+            
+            # Recolectar todos los valores
+            symbols_data = collect_all_variables()
+            
+            # Mostrar resumen
+            successful_collections = sum(1 for s in symbols_data if s["success"])
+            print(f"\nResumen:")
+            print(f"  - Total de símbolos: {len(symbols_data)}")
+            print(f"  - Consultas exitosas: {successful_collections}")
+            print(f"  - Consultas fallidas: {len(symbols_data) - successful_collections}")
+            
+            # Subir a la base de datos
+            if symbols_data:
+                print("\nSubiendo datos a la base de datos...")
+                upload_symbols_to_sql(symbols_data)
+                print("Proceso completado.")
+            else:
+                print("No hay datos para subir a la base de datos.")
+            
+            print(f"\nEsperando 30 segundos para la próxima ejecución...")
+            time.sleep(2)
+            
+    except KeyboardInterrupt:
+        print("\n\nPrograma detenido por el usuario.")
+        print("¡Hasta luego!")
 
 if __name__ == "__main__":
     main() 
