@@ -4,6 +4,8 @@ import chardet
 from datetime import datetime
 from database import sql_connection
 from pg8000.exceptions import DatabaseError
+import openpyxl
+from openpyxl import load_workbook
 
 def detect_encoding(file_path):
     """
@@ -270,7 +272,82 @@ def read_symbols_from_csv(file_path):
     except Exception as e:
         print(f"Ha ocurrido un error inesperado al leer el archivo CSV: {e}")
         return None
-    
+
+def read_symbols_from_xlsx(file_path):
+    """
+    Lee los símbolos desde un archivo XLSX.
+    """
+    if not os.path.exists(file_path):
+        print(f"Error: El archivo {file_path} no fue encontrado.")
+        return None
+        
+    try:
+        print(f"Leyendo archivo XLSX: {file_path}")
+        workbook = load_workbook(filename=file_path, read_only=True)
+        
+        # Obtener la primera hoja
+        sheet = workbook.active
+        
+        symbols_data = {}
+        
+        # Leer la primera fila para obtener los nombres de las columnas
+        headers = []
+        for cell in sheet[1]:
+            headers.append(cell.value)
+        
+        print(f"Headers encontrados: {headers}")
+        
+        # Mapear las columnas que nos interesan
+        column_mapping = {}
+        for i, header in enumerate(headers, 1):
+            if header in ['Name', 'Path', 'Data Type', 'Logical Address', 'Comment']:
+                column_mapping[header] = i
+        
+        print(f"Mapeo de columnas: {column_mapping}")
+        
+        # Procesar cada fila de datos (empezando desde la fila 2)
+        for row_num in range(2, sheet.max_row + 1):
+            row_data = {}
+            
+            # Leer los valores de las columnas que nos interesan
+            for column_name, col_index in column_mapping.items():
+                cell_value = sheet.cell(row=row_num, column=col_index).value
+                row_data[column_name] = str(cell_value) if cell_value is not None else ''
+            
+            # Solo procesar filas que tengan al menos un Name
+            if row_data.get('Name') and row_data['Name'].strip():
+                # Determinar el módulo basado en el Path o usar un valor por defecto
+                module = 'XLSX_Data'
+                if row_data.get('Path'):
+                    # Extraer el módulo del path si es posible
+                    path_parts = row_data['Path'].split('.')
+                    if len(path_parts) > 1:
+                        module = path_parts[0]
+                
+                # Crear entrada para la variable
+                symbol_entry = {
+                    'Address': row_data.get('Logical Address', ''),
+                    'Symbol': row_data.get('Name', ''),
+                    'Data type': row_data.get('Data Type', ''),
+                    'Comment': row_data.get('Comment', ''),
+                    'value': '',  # Valor vacío para datos del XLSX
+                    'timestamp': datetime.now().isoformat()  # Timestamp actual
+                }
+                
+                # Agrupar por módulo
+                if module not in symbols_data:
+                    symbols_data[module] = []
+                
+                symbols_data[module].append(symbol_entry)
+        
+        workbook.close()
+        print(f"Archivo XLSX leído exitosamente. Módulos encontrados: {list(symbols_data.keys())}")
+        return symbols_data
+        
+    except Exception as e:
+        print(f"Ha ocurrido un error inesperado al leer el archivo XLSX: {e}")
+        return None
+
 def convert_value_to_boolean_or_word(value, symbol):
     if symbol.get('Symbol') != 'Repeticiones' or symbol.get('Symbol') != 'CiclosTerminados':
         return True if value == '1' else False
@@ -347,22 +424,41 @@ def main():
     """
     Función principal para cargar símbolos y subirlos a la base de datos.
     """
-    symbols = read_symbols_from_csv('C:/Users/Juan/Desktop/Projects/Universidad/automatica-dsc/opc-python-wincc/EXPORT.csv')
+    # symbols = read_symbols_from_csv('C:/Users/Juan/Desktop/Projects/Universidad/automatica-dsc/opc-python-wincc/EXPORT.csv')
 
-    if symbols:
-        print("Símbolos cargados correctamente desde el archivo CSV:")
-        for module, symbol_list in symbols.items():
+    # if symbols:
+    #     print("Símbolos cargados correctamente desde el archivo CSV:")
+    #     for module, symbol_list in symbols.items():
+    #         print(f"\nMódulo: {module}")
+    #         for symbol in symbol_list:
+    #             if symbol.get('Symbol'):
+    #                 print(f"  - Símbolo: {symbol['Symbol']}, Dirección: {symbol['Address']}, Tipo: {symbol['Data type']}, Valor: {symbol.get('value')}, Timestamp: {symbol.get('timestamp')}")
+
+    #     print("\n--- Lectura de datos finalizada ---")
+    #     for module, symbol_list in symbols.items():
+    #         for symbol in symbol_list:
+    #             if symbol.get('Symbol'):
+    #                 print(f"Leyendo valor para el símbolo: {symbol['Symbol']}. Valor actual: {symbol.get('value')}")
+
+    #     upload_symbols_to_sql(symbols)
+
+    symbols_xlsx = read_symbols_from_xlsx('C:/Users/Juan/Desktop/Projects/Universidad/automatica-dsc/opc-python-wincc/REPORTS_V2.xlsx')
+
+    if symbols_xlsx:
+        print("Símbolos cargados correctamente desde el archivo XLSX:")
+        for module, symbol_list in symbols_xlsx.items():
             print(f"\nMódulo: {module}")
             for symbol in symbol_list:
                 if symbol.get('Symbol'):
                     print(f"  - Símbolo: {symbol['Symbol']}, Dirección: {symbol['Address']}, Tipo: {symbol['Data type']}, Valor: {symbol.get('value')}, Timestamp: {symbol.get('timestamp')}")
 
         print("\n--- Lectura de datos finalizada ---")
-        for module, symbol_list in symbols.items():
+        for module, symbol_list in symbols_xlsx.items():
             for symbol in symbol_list:
                 if symbol.get('Symbol'):
                     print(f"Leyendo valor para el símbolo: {symbol['Symbol']}. Valor actual: {symbol.get('value')}")
 
-        upload_symbols_to_sql(symbols)
+        upload_symbols_to_sql(symbols_xlsx)
+
 if __name__ == "__main__":
     main()
